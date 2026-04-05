@@ -233,7 +233,7 @@ with tab2:
                 textposition="top center", textfont=bound_text, name='Boundary', hoverinfo='none'
             ))
             
-            cent_marker = dict(symbol='circle', color='blue', size=12, line=dict(color='black', width=1.5))
+            cent_marker = dict(symbol='circle', color='black', size=8, line=dict(color='black', width=1.5))
             fig2.add_trace(go.Scatter(x=[cx], y=[cy], mode='markers', marker=cent_marker, name='Centroid'))
             
             p_xaxis = dict(visible=False, range=[-45, 45])
