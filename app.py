@@ -113,8 +113,8 @@ with tab1:
             add_tri_zone(fig, [0, 64, 47, 31, 0], [77, 13, 13, 29, 29], [23, 23, 40, 40, 71], 'rgba(135,206,250,0.8)', 'D2')
             add_tri_zone(fig, [0, 31, 47, 87, 96, 46, 35, 0], [29, 29, 13, 13, 4, 4, 15, 15], [71, 40, 40, 0, 0, 50, 50, 85], 'rgba(224,255,255,0.8)', 'DT')
             
-            pt_mark = dict(symbol='circle', color='black', size=6, line=dict(color='white', width=2))
-            fig.add_trace(go.Scatterternary(a=[p_ch4], b=[p_c2h2], c=[p_c2h4], mode='markers', marker=pt_mark, name='Point'))
+            pt_mark = dict(symbol='circle', color='red', size=6, line=dict(color='white', width=2))
+            fig.add_trace(go.Scatterternary(a=[p_ch4], b=[p_c2h2], c=[p_c2h4], mode='markers', marker=pt_mark, name='Calculated Point'))
             
             t_layout = dict(sum=100, aaxis=dict(title='CH4 %', min=0), baxis=dict(title='C2H2 %', min=0), caxis=dict(title='C2H4 %', min=0))
             fig.update_layout(plot_bgcolor='white', paper_bgcolor='white', ternary=t_layout, height=500)
