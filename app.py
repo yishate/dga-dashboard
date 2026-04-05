@@ -14,7 +14,6 @@ def in_polygon(x, y, px, py):
         dx = px[j] - px[i]
         dy = py[j] - py[i]
         
-        # Prevent division by zero if line is perfectly horizontal
         if dy != 0:
             intersect_x = (dx * (y - py[i]) / dy) + px[i]
             condition2 = x < intersect_x
@@ -32,6 +31,7 @@ def get_triangle_diagnosis(ch4, c2h4, c2h2):
     p_c2h4 = (c2h4 / total) * 100
     p_c2h2 = (c2h2 / total) * 100
     
+    # Diagnosis logic matching the MATLAB visual boundaries
     if p_ch4 >= 98: 
         return p_ch4, p_c2h4, p_c2h2, "PD (Partial Discharge)"
     elif p_c2h2 >= 13 and p_ch4 < 98: 
@@ -86,7 +86,7 @@ st.title("Smart DGA Dashboard")
 tab1, tab2 = st.tabs(["Duval Triangle", "Duval Pentagon"])
 
 # ------------------------------------------
-# TAB 1: DUVAL TRIANGLE
+# TAB 1: DUVAL TRIANGLE (MATLAB COORDINATES)
 # ------------------------------------------
 with tab1:
     p_ch4, p_c2h4, p_c2h2, tri_fault = get_triangle_diagnosis(ch4, c2h4, c2h2)
@@ -104,16 +104,18 @@ with tab1:
         if (ch4 + c2h4 + c2h2) > 0:
             fig = go.Figure()
             
-            add_tri_zone(fig, [98, 100, 98], [0, 0, 2], [2, 0, 0], 'rgba(128,0,0,0.6)', 'PD')
-            add_tri_zone(fig, [98, 98, 76, 80], [0, 2, 4, 0], [2, 0, 20, 20], 'rgba(255,165,0,0.6)', 'T1')
-            add_tri_zone(fig, [80, 76, 46, 50], [0, 4, 4, 0], [20, 20, 50, 50], 'rgba(255,200,150,0.8)', 'T2')
-            add_tri_zone(fig, [50, 46, 31, 0, 0], [0, 4, 15, 15, 0], [50, 50, 54, 85, 100], 'rgba(139,69,19,0.6)', 'T3')
-            add_tri_zone(fig, [98, 87, 64, 76], [2, 13, 13, 4], [0, 0, 23, 20], 'rgba(173,216,230,0.6)', 'D1')
-            add_tri_zone(fig, [87, 0, 0, 31, 46, 64], [13, 100, 71, 15, 4, 13], [0, 0, 29, 54, 50, 23], 'rgba(135,206,250,0.8)', 'D2')
-            add_tri_zone(fig, [64, 46, 31, 0, 0], [13, 4, 15, 71, 15], [23, 50, 54, 29, 85], 'rgba(224,255,255,0.8)', 'DT')
+            # Exact coordinates extracted from the MATLAB script
+            # MATLAB Mapping: a = C2H2, b = CH4, c = C2H4
+            add_tri_zone(fig, [2, 0, 0], [98, 100, 98], [0, 0, 2], 'rgba(128,0,0,0.6)', 'PD')
+            add_tri_zone(fig, [0, 4, 4, 2, 0], [80, 76, 96, 98, 98], [20, 20, 0, 0, 2], 'rgba(255,165,0,0.6)', 'T1')
+            add_tri_zone(fig, [0, 4, 4, 0], [50, 46, 76, 80], [50, 50, 20, 20], 'rgba(255,200,150,0.8)', 'T2')
+            add_tri_zone(fig, [15, 15, 0, 0], [0, 35, 50, 0], [85, 50, 50, 100], 'rgba(139,69,19,0.6)', 'T3')
+            add_tri_zone(fig, [100, 13, 13, 77], [0, 87, 64, 0], [0, 0, 23, 23], 'rgba(173,216,230,0.6)', 'D1')
+            add_tri_zone(fig, [77, 13, 13, 29, 29], [0, 64, 47, 31, 0], [23, 23, 40, 40, 71], 'rgba(135,206,250,0.8)', 'D2')
+            add_tri_zone(fig, [29, 29, 13, 13, 4, 4, 15, 15], [0, 31, 47, 87, 96, 46, 35, 0], [71, 40, 40, 0, 0, 50, 50, 85], 'rgba(224,255,255,0.8)', 'DT')
             
             fig.add_trace(go.Scatterternary(
-                a=[p_ch4], b=[p_c2h2], c=[p_c2h4], mode='markers', 
+                a=[p_c2h2], b=[p_ch4], c=[p_c2h4], mode='markers', 
                 marker=dict(symbol='circle', color='black', size=14, line=dict(color='white', width=2)), 
                 name='Calculated Point'
             ))
@@ -121,8 +123,10 @@ with tab1:
             fig.update_layout(
                 plot_bgcolor='white', paper_bgcolor='white', 
                 ternary=dict(
-                    sum=100, aaxis=dict(title='CH4 %', min=0), 
-                    baxis=dict(title='C2H2 %', min=0), caxis=dict(title='C2H4 %', min=0)
+                    sum=100, 
+                    aaxis=dict(title='C2H2 %', min=0), 
+                    baxis=dict(title='CH4 %', min=0), 
+                    caxis=dict(title='C2H4 %', min=0)
                 ), height=500
             )
             st.plotly_chart(fig, use_container_width=True)
@@ -130,7 +134,7 @@ with tab1:
             st.warning("Please enter gas values greater than 0 to generate the Triangle.")
 
 # ------------------------------------------
-# TAB 2: DUVAL PENTAGON
+# TAB 2: DUVAL PENTAGON (MATLAB LOGIC)
 # ------------------------------------------
 with tab2:
     col_pent_chart, col_pent_results = st.columns([7, 3])
