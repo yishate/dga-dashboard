@@ -2,26 +2,19 @@ import streamlit as st
 import plotly.graph_objects as go
 
 # ==========================================
-# 1. MATHS & POLYGON LOGIC
+# 1. THE "BRAIN": MATHS & POLYGON LOGIC
 # ==========================================
-def in_polygon(px_pt, py_pt, poly_x, poly_y):
+def in_polygon(x, y, px, py):
     inside = False
-    n = len(poly_x)
+    n = len(px)
     j = n - 1
     for i in range(n):
-        y_i = poly_y[i]
-        y_j = poly_y[j]
-        x_i = poly_x[i]
-        x_j = poly_x[j]
-        
-        cond1 = (y_i > py_pt) != (y_j > py_pt)
-        
-        dy = y_j - y_i
+        cond1 = (py[i] > y) != (py[j] > y)
+        dx = px[j] - px[i]
+        dy = py[j] - py[i]
         if dy != 0:
-            dx = x_j - x_i
-            y_diff = py_pt - y_i
-            intersect = (dx * y_diff / dy) + x_i
-            cond2 = px_pt < intersect
+            intersect_x = (dx * (y - py[i]) / dy) + px[i]
+            cond2 = x < intersect_x
             if cond1 and cond2:
                 inside = not inside
         j = i
@@ -73,13 +66,19 @@ st.set_page_config(page_title="Smart DGA Dashboard", layout="wide")
 with st.sidebar:
     st.title("Data Input")
     st.markdown("Enter gas concentrations (ppm)")
-    oil_type = st.radio("Select Insulating Fluid:", ["Mineral Oil", "Natural Ester (NE)"])
+    
+    oil_type = st.radio(
+        "Select Insulating Fluid:", 
+        ["Mineral Oil", "Natural Ester (NE)"]
+    )
     st.divider()
-    h2 = st.number_input("H2", min_value=0.0, value=10.0, step=1.0)
-    ch4 = st.number_input("CH4", min_value=0.0, value=50.0, step=1.0)
-    c2h6 = st.number_input("C2H6", min_value=0.0, value=20.0, step=1.0)
-    c2h2 = st.number_input("C2H2", min_value=0.0, value=5.0, step=1.0)
-    c2h4 = st.number_input("C2H4", min_value=0.0, value=40.0, step=1.0)
+    
+    # Values set to 0.0 for a clean start
+    h2 = st.number_input("H2", min_value=0.0, value=0.0, step=1.0)
+    ch4 = st.number_input("CH4", min_value=0.0, value=0.0, step=1.0)
+    c2h6 = st.number_input("C2H6", min_value=0.0, value=0.0, step=1.0)
+    c2h2 = st.number_input("C2H2", min_value=0.0, value=0.0, step=1.0)
+    c2h4 = st.number_input("C2H4", min_value=0.0, value=0.0, step=1.0)
 
 # ==========================================
 # 3. MAIN INTERFACE
