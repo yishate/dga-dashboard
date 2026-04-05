@@ -75,16 +75,43 @@ with tab1:
         
         # Only draw if the sum > 0
         if (ch4 + c2h4 + c2h2) > 0:
-            fig = go.Figure(go.Scatterternary({
-                'mode': 'markers',
-                'a': [p_ch4],   # Top
-                'b': [p_c2h2],  # Bottom Left
-                'c': [p_c2h4],  # Bottom Right
-                'marker': {'symbol': 'circle', 'color': 'red', 'size': 14},
-                'name': 'Fault Point'
-            }))
             
+            # 1. Create the blank canvas
+            fig = go.Figure()
+            
+            # 2. DRAW THE STATIC COLOURED ZONES (Base Layers)
+            # Example: The PD (Partial Discharge) Zone at the very top tip
+            fig.add_trace(go.Scatterternary(
+                a=[98, 100, 98],  # CH4 % coordinates
+                b=[0, 0, 2],      # C2H2 % coordinates
+                c=[2, 0, 0],      # C2H4 % coordinates
+                mode='lines',
+                fill='toself',
+                fillcolor='rgba(255, 0, 0, 0.3)', # Light red with 30% transparency
+                line=dict(color='black', width=1),
+                name='PD Zone',
+                hoverinfo='name'
+            ))
+            
+            # NOTE: You will copy and paste the block above and change the coordinates 
+            # to draw the T1, T2, T3, D1, D2, and DT zones next!
+
+            # 3. DRAW YOUR CALCULATED FAULT POINT (Top Layer)
+            fig.add_trace(go.Scatterternary(
+                a=[p_ch4],   # Methane axis
+                b=[p_c2h2],  # Acetylene axis
+                c=[p_c2h4],  # Ethylene axis
+                mode='markers',
+                marker=dict(symbol='circle', color='black', size=14),
+                name='Calculated Fault',
+                text=[f"Fault: {fault_type}"],
+                hoverinfo='text'
+            ))
+            
+            # 4. CLEAN UP THE GRAPH BACKGROUND 
             fig.update_layout({
+                'plot_bgcolor': 'white',
+                'paper_bgcolor': 'white',
                 'ternary': {
                     'sum': 100,
                     'aaxis': {'title': 'CH4 %', 'min': 0, 'linewidth': 2, 'ticks': 'outside'},
@@ -92,7 +119,10 @@ with tab1:
                     'caxis': {'title': 'C2H4 %', 'min': 0, 'linewidth': 2, 'ticks': 'outside'}
                 }
             })
+            
+            # 5. RENDER TO STREAMLIT
             st.plotly_chart(fig, use_container_width=True)
+            
         else:
             st.warning("Please enter values greater than 0 for CH4, C2H4, or C2H2 to see the plot.")
 
