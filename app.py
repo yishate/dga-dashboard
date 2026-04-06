@@ -74,11 +74,11 @@ with st.sidebar:
     st.divider()
     
     # Values set to 0.0 for a clean start
-    h2 = st.number_input("H2 (Hydrogen)", min_value=0, value=0, step=1.0)
-    ch4 = st.number_input("CH4 (Methane)", min_value=0, value=0, step=1.0)
-    c2h6 = st.number_input("C2H6 (Ethane)", min_value=0, value=0, step=1.0)
-    c2h2 = st.number_input("C2H2 (Acetylene)", min_value=0, value=0, step=1.0)
-    c2h4 = st.number_input("C2H4 (Ethylene)", min_value=0, value=0, step=1.0)
+    h2 = st.number_input("H2 (Hydrogen)", min_value=0.0, value=0, step=1.0)
+    ch4 = st.number_input("CH4 (Methane)", min_value=0.0, value=0, step=1.0)
+    c2h6 = st.number_input("C2H6 (Ethane)", min_value=0.0, value=0, step=1.0)
+    c2h2 = st.number_input("C2H2 (Acetylene)", min_value=0.0, value=0, step=1.0)
+    c2h4 = st.number_input("C2H4 (Ethylene)", min_value=0.0, value=0, step=1.0)
 
 # ==========================================
 # 3. MAIN INTERFACE
