@@ -103,7 +103,6 @@ with st.sidebar:
     )
     st.divider()
     
-    # Values set to 0.0 for a clean start
     h2 = st.number_input("H2 (Hydrogen)", min_value=0, value=0, step=1)
     ch4 = st.number_input("CH4 (Methane)", min_value=0, value=0, step=1)
     c2h6 = st.number_input("C2H6 (Ethane)", min_value=0, value=0, step=1)
@@ -131,10 +130,11 @@ with tab1:
             st.error("🚨 **Alert:** Fault detected.")
             st.markdown(f"**Fault Type:** {tri_fault}")
             
-        # Insert Bar Chart
         if (h2 + ch4 + c2h6 + c2h2 + c2h4) > 0:
             st.divider()
-            st.plotly_chart(get_bar_chart(h2, ch4, c2h6, c2h2, c2h4), use_container_width=True)
+            bc_fig1 = get_bar_chart(h2, ch4, c2h6, c2h2, c2h4)
+            # ADDED UNIQUE KEY HERE
+            st.plotly_chart(bc_fig1, use_container_width=True, key="bar1")
 
     with col_chart:
         if (ch4 + c2h4 + c2h2) > 0:
@@ -174,113 +174,4 @@ with tab2:
         
         p_ord = [p_H2, p_C2H6, p_CH4, p_C2H4, p_C2H2]
         
-        cBase = [(0, 40), (-38, 12.4), (-23.5, -32.4), (23.5, -32.4), (38, 12.4)]
-        
-        x = []
-        y = []
-        for i in range(5):
-            x.append((p_ord[i]/100) * cBase[i][0])
-            y.append((p_ord[i]/100) * cBase[i][1])
-            
-        x.append(x[0])
-        y.append(y[0])
-
-        A = 0
-        for i in range(5):
-            term1 = x[i] * y[i+1]
-            term2 = x[i+1] * y[i]
-            A += 0.5 * (term1 - term2)
-            
-        cx = 0
-        cy = 0
-        
-        if A != 0:
-            for i in range(5):
-                t1 = x[i] * y[i+1]
-                t2 = x[i+1] * y[i]
-                factor = t1 - t2
-                cx += (x[i] + x[i+1]) * factor
-                cy += (y[i] + y[i+1]) * factor
-            cx = cx / (6 * A)
-            cy = cy / (6 * A)
-
-        pdX = [0, -1, -1, 0]
-        pdY = [33, 33, 24.5, 24.5]
-        
-        d1X = [0, 38, 32, 4, 0]
-        d1Y = [40, 12, -6.1, 16, 1.5]
-        
-        d2X = [4, 32, 24.3, 0, 0]
-        d2Y = [16, -6.1, -30, -3, 1.5]
-        
-        t3X = [0, 24.3, 23.5, 1, -6]
-        t3Y = [-3, -30, -32.4, -32, -4]
-        
-        t2X = [-6, 1, -22.5]
-        t2Y = [-4, -32.4, -32.4]
-        
-        t1X = [-6, -22.5, -23.5, -35, 0, 0]
-        t1Y = [-4, -32.4, -32.4, 3, 1.5, -3]
-        
-        sX  = [0, -35, -38, 0, 0, -1, -1, 0]
-        sY  = [1.5, 3.1, 12.4, 40, 33, 33, 24.5, 24.5]
-
-        if in_polygon(cx, cy, pdX, pdY):
-            pent_fault = "PD (Partial Discharge)"
-        elif in_polygon(cx, cy, d1X, d1Y):
-            pent_fault = "D1 (Low Energy Arcing)"
-        elif in_polygon(cx, cy, d2X, d2Y):
-            pent_fault = "D2 (High Energy Arcing)"
-        elif in_polygon(cx, cy, t3X, t3Y):
-            pent_fault = "T3 (Thermal > 700°C)"
-        elif in_polygon(cx, cy, t2X, t2Y):
-            pent_fault = "T2 (Thermal 300 - 700°C)"
-        elif in_polygon(cx, cy, t1X, t1Y):
-            pent_fault = "T1 (Thermal < 300°C)"
-        elif in_polygon(cx, cy, sX, sY):
-            pent_fault = "S (Stray Gassing)"
-        else:
-            pent_fault = "Unknown / Borderline"
-
-        with col_pent_results:
-            st.subheader("Pentagon Diagnosis")
-            st.markdown(f"**Calculated Centroid:**\nX: {cx:.2f}, Y: {cy:.2f}")
-            st.error("🚨 **Alert:** Fault detected.")
-            st.markdown(f"**Fault Type:** {pent_fault}")
-            
-            # Insert Bar Chart
-            st.divider()
-            st.plotly_chart(get_bar_chart(h2, ch4, c2h6, c2h2, c2h4), use_container_width=True)
-
-        with col_pent_chart:
-            fig2 = go.Figure()
-            
-            add_pent_zone(fig2, pdX, pdY, 'rgba(204,204,255,0.6)', 'PD') 
-            add_pent_zone(fig2, d1X, d1Y, 'rgba(255,204,204,0.6)', 'D1') 
-            add_pent_zone(fig2, d2X, d2Y, 'rgba(255,153,153,0.6)', 'D2') 
-            add_pent_zone(fig2, t3X, t3Y, 'rgba(255,229,153,0.6)', 'T3') 
-            add_pent_zone(fig2, t2X, t2Y, 'rgba(255,255,153,0.6)', 'T2') 
-            add_pent_zone(fig2, t1X, t1Y, 'rgba(204,255,204,0.6)', 'T1') 
-            add_pent_zone(fig2, sX, sY, 'rgba(229,229,229,0.6)', 'S')  
-
-            bound_line = dict(color='black', width=2)
-            bound_text = dict(size=14, color="blue", weight="bold")
-            
-            fig2.add_trace(go.Scatter(
-                x=[0, -38, -23.5, 23.5, 38, 0], y=[40, 12.4, -32.4, -32.4, 12.4, 40], 
-                mode='lines+text', line=bound_line, text=['H2', 'C2H6', 'CH4', 'C2H4', 'C2H2', ''], 
-                textposition="top center", textfont=bound_text, name='Boundary', hoverinfo='none'
-            ))
-            
-            cent_marker = dict(symbol='circle', color='red', size=6, line=dict(color='red', width=1))
-            fig2.add_trace(go.Scatter(x=[cx], y=[cy], mode='markers', marker=cent_marker, name='Centroid'))
-            
-            p_xaxis = dict(visible=False, range=[-45, 45])
-            p_yaxis = dict(visible=False, range=[-40, 45])
-            p_legend = dict(orientation="h", yanchor="bottom", y=-0.2, xanchor="center", x=0.5)
-            
-            fig2.update_layout(plot_bgcolor='white', paper_bgcolor='white', xaxis=p_xaxis, yaxis=p_yaxis, height=600, showlegend=True, legend=p_legend)
-            
-            st.plotly_chart(fig2, use_container_width=True)
-    else:
-        st.warning("Please enter gas values greater than 0.")
+        cBase = [(0, 40), (-38,
