@@ -58,6 +58,36 @@ def add_pent_zone(fig, x_vals, y_vals, colour, name):
     )
     fig.add_trace(trace)
 
+def get_bar_chart(val_h2, val_ch4, val_c2h6, val_c2h2, val_c2h4):
+    x_labels = ['H2', 'CH4', 'C2H6', 'C2H2', 'C2H4']
+    y_values = [val_h2, val_ch4, val_c2h6, val_c2h2, val_c2h4]
+    
+    bar_trace = go.Bar(
+        x=x_labels, 
+        y=y_values, 
+        marker_color='#1f77b4',
+        text=y_values,
+        textposition='auto'
+    )
+    
+    fig = go.Figure(bar_trace)
+    
+    b_layout = dict(
+        title="Gas Concentrations",
+        xaxis=dict(title="Gas Type"),
+        yaxis=dict(title="ppm"),
+        height=350,
+        margin=dict(t=40, b=10, l=10, r=10),
+        plot_bgcolor='white',
+        paper_bgcolor='white'
+    )
+    
+    fig.update_layout(b_layout)
+    fig.update_xaxes(showline=True, linewidth=1, linecolor='black')
+    fig.update_yaxes(showline=True, linewidth=1, linecolor='black', gridcolor='lightgray')
+    
+    return fig
+
 # ==========================================
 # 2. PAGE CONFIGURATION & SIDEBAR
 # ==========================================
@@ -100,6 +130,11 @@ with tab1:
         else:
             st.error("🚨 **Alert:** Fault detected.")
             st.markdown(f"**Fault Type:** {tri_fault}")
+            
+        # Insert Bar Chart
+        if (h2 + ch4 + c2h6 + c2h2 + c2h4) > 0:
+            st.divider()
+            st.plotly_chart(get_bar_chart(h2, ch4, c2h6, c2h2, c2h4), use_container_width=True)
 
     with col_chart:
         if (ch4 + c2h4 + c2h2) > 0:
@@ -212,6 +247,10 @@ with tab2:
             st.markdown(f"**Calculated Centroid:**\nX: {cx:.2f}, Y: {cy:.2f}")
             st.error("🚨 **Alert:** Fault detected.")
             st.markdown(f"**Fault Type:** {pent_fault}")
+            
+            # Insert Bar Chart
+            st.divider()
+            st.plotly_chart(get_bar_chart(h2, ch4, c2h6, c2h2, c2h4), use_container_width=True)
 
         with col_pent_chart:
             fig2 = go.Figure()
