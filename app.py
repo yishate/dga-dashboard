@@ -97,10 +97,8 @@ with st.sidebar:
     st.title("Data Input")
     st.markdown("Enter gas concentrations (ppm)")
     
-    oil_type = st.radio(
-        "Select Insulating Fluid:", 
-        ["Mineral Oil", "Natural Ester (NE)"]
-    )
+   
+
     st.divider()
     
     h2 = st.number_input("H2 (Hydrogen)", min_value=0, value=0, step=1)
