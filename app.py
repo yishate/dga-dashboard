@@ -91,7 +91,7 @@ def get_bar_chart(val_h2, val_ch4, val_c2h6, val_c2h2, val_c2h4):
 # ==========================================
 # 2. PAGE CONFIGURATION & SIDEBAR
 # ==========================================
-st.set_page_config(page_title="Smart DGA Dashboard", layout="wide")
+st.set_page_config(page_title="Smart DGA Dashboard for Natural Ester", layout="wide")
 
 with st.sidebar:
     st.title("Data Input")
