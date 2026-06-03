@@ -202,7 +202,6 @@ with tab2:
 
         # ---------------------------------------------------------
         # FLUSH CLONED PENTAGON 3 COORDINATES 
-        # (All inner convergence points snapped precisely to 0,0)
         # ---------------------------------------------------------
         pdX = [0, -1.8, -1.8, 0]
         pdY = [33, 33, 24, 24]
@@ -216,15 +215,14 @@ with tab2:
         t3X = [0, 23.5, 0]
         t3Y = [0, -32.4, -32.4]
         
-        # FIXED: T2 corner perfectly locked to (0,0)
-        t2X = [0, 0, -11.75, -5.5]
-        t2Y = [0, -32.4, -32.4, -6.1]
+        # FIXED: T2 corner updated with your precise kink coordinate
+        t2X = [0, 0, -11.75, -9.91]
+        t2Y = [0, -32.4, -32.4, 2.89]
         
-        # FIXED: T1 corner perfectly locked to (0,0)
-        t1X = [0, -5.5, -11.75, -23.5, -38, -9.7]
-        t1Y = [0, -6.1, -32.4, -32.4, 12.4, 5.8]
+        # FIXED: T1 corner updated with your precise kink coordinate
+        t1X = [0, -9.91, -11.75, -23.5, -38, -9.7]
+        t1Y = [0, 2.89, -32.4, -32.4, 12.4, 5.8]
         
-        # FIXED: S corner perfectly locked to (0,0)
         sX  = [0, -9.7, -38, 0, 0, -1.8, -1.8, 0]
         sY  = [0, 5.8, 12.4, 40, 33, 33, 24, 24]
 
@@ -293,4 +291,3 @@ with tab2:
             st.plotly_chart(fig2, use_container_width=True)
     else:
         st.warning("Please enter gas values greater than 0.")
-    
