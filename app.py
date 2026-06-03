@@ -200,14 +200,12 @@ with tab2:
             cx = cx / (6 * A)
             cy = cy / (6 * A)
 
-      # ---------------------------------------------------------
+        # ---------------------------------------------------------
         # FLUSH CLONED PENTAGON 3 COORDINATES (Origin at 0,0)
         # ---------------------------------------------------------
-        # FIXED: PD moved to the left (-X axis)
         pdX = [0, -1.8, -1.8, 0]
         pdY = [33, 33, 24, 24]
         
-        # FIXED: D1 left border is now perfectly straight
         d1X = [0, 38, 30.5, 6, 0]
         d1Y = [40, 12.4, -10.5, 12.5, 0]
         
@@ -217,77 +215,14 @@ with tab2:
         t3X = [0, 23.5, 0]
         t3Y = [0, -32.4, -32.4]
         
-        t2X = [0, 0, -11.75, -5.5]
-        t2Y = [0, -32.4, -32.4, -6.1]
+        # FIXED: User's custom inner alignment applied to T1, T2, and S zones
+        t2X = [0, 0, -11.75, -3.4]
+        t2Y = [0, -32.4, -32.4, 1.6]
         
-        t1X = [-5.5, -11.75, -23.5, -38, -10.5]
-        t1Y = [-6.1, -32.4, -32.4, 12.4, 3.5]
+        t1X = [-3.4, -11.75, -23.5, -38, -9.7]
+        t1Y = [1.6, -32.4, -32.4, 12.4, 5.8]
         
-        # FIXED: S zone now wraps perfectly around the PD cutout on the left
-        sX  = [0, -5.5, -10.5, -38, 0, 0, -1.8, -1.8, 0]
-        sY  = [0, -6.1, 3.5, 12.4, 40, 33, 33, 24, 24]
-        if in_polygon(cx, cy, pdX, pdY):
-            pent_fault = "PD (Partial Discharge)"
-        elif in_polygon(cx, cy, d1X, d1Y):
-            pent_fault = "D1 (Low Energy Arcing)"
-        elif in_polygon(cx, cy, d2X, d2Y):
-            pent_fault = "D2 (High Energy Arcing)"
-        elif in_polygon(cx, cy, t3X, t3Y):
-            pent_fault = "T3 (Thermal > 700°C)"
-        elif in_polygon(cx, cy, t2X, t2Y):
-            pent_fault = "T2 (Thermal 300 - 700°C)"
-        elif in_polygon(cx, cy, t1X, t1Y):
-            pent_fault = "T1 (Thermal < 300°C)"
-        elif in_polygon(cx, cy, sX, sY):
-            pent_fault = "S (Stray Gassing)"
-        else:
-            pent_fault = "Unknown / Borderline"
+        sX  = [0, -3.4, -9.7, -38, 0, 0, -1.8, -1.8, 0]
+        sY  = [0, 1.6, 5.8, 12.4, 40, 33, 33, 24, 24]
 
-        with col_pent_results:
-            st.subheader("Pentagon 3 Diagnosis")
-            st.markdown(f"**Calculated Centroid:**\nX: {cx:.2f}, Y: {cy:.2f}")
-            st.error("🚨 **Alert:** Fault detected.")
-            st.markdown(f"**Fault Type:** {pent_fault}")
-            
-            st.divider()
-            bc_fig2 = get_bar_chart(h2, ch4, c2h6, c2h2, c2h4)
-            st.plotly_chart(bc_fig2, use_container_width=True, key="bar2")
-
-        with col_pent_chart:
-            fig2 = go.Figure()
-            
-            add_pent_zone(fig2, pdX, pdY, 'rgba(204,204,255,0.6)', 'PD') 
-            add_pent_zone(fig2, d1X, d1Y, 'rgba(255,204,204,0.6)', 'D1') 
-            add_pent_zone(fig2, d2X, d2Y, 'rgba(255,153,153,0.6)', 'D2') 
-            add_pent_zone(fig2, t3X, t3Y, 'rgba(255,229,153,0.6)', 'T3') 
-            add_pent_zone(fig2, t2X, t2Y, 'rgba(255,255,153,0.6)', 'T2') 
-            add_pent_zone(fig2, t1X, t1Y, 'rgba(204,255,204,0.6)', 'T1') 
-            add_pent_zone(fig2, sX, sY, 'rgba(229,229,229,0.6)', 'S')  
-
-            bound_line = dict(color='black', width=2)
-            bound_text = dict(size=14, color="blue", weight="bold")
-            
-            fig2.add_trace(go.Scatter(
-                x=[0, -38, -23.5, 23.5, 38, 0], 
-                y=[40, 12.4, -32.4, -32.4, 12.4, 40], 
-                mode='lines+text', 
-                line=bound_line, 
-                text=['H2', 'C2H6', 'CH4', 'C2H4', 'C2H2', ''], 
-                textposition="middle center", 
-                textfont=bound_text, 
-                name='Boundary', 
-                hoverinfo='none'
-            ))
-            
-            cent_marker = dict(symbol='circle', color='red', size=6, line=dict(color='red', width=1))
-            fig2.add_trace(go.Scatter(x=[cx], y=[cy], mode='markers', marker=cent_marker, name='Centroid'))
-            
-            p_xaxis = dict(visible=False, range=[-45, 45])
-            p_yaxis = dict(visible=False, range=[-45, 45], scaleanchor="x", scaleratio=1) 
-            p_legend = dict(orientation="h", yanchor="bottom", y=-0.2, xanchor="center", x=0.5)
-            
-            fig2.update_layout(plot_bgcolor='white', paper_bgcolor='white', xaxis=p_xaxis, yaxis=p_yaxis, height=600, showlegend=True, legend=p_legend)
-            
-            st.plotly_chart(fig2, use_container_width=True)
-    else:
-        st.warning("Please enter gas values greater than 0.")
+        if in_polygon(cx
