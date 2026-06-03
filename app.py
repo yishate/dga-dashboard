@@ -20,7 +20,8 @@ def in_polygon(x, y, px, py):
         j = i
     return inside
 
-def get_triangle_diagnosis(ch4, c2h4, c2h2):
+# Updated to Duval Triangle 3 Logic (Natural Esters)
+def get_triangle_3_diagnosis(ch4, c2h4, c2h2):
     total = ch4 + c2h4 + c2h2
     if total == 0:
         return 0, 0, 0, "Normal"
@@ -31,9 +32,9 @@ def get_triangle_diagnosis(ch4, c2h4, c2h2):
     
     if p_ch4 >= 98:
         return p_ch4, p_c2h4, p_c2h2, "PD (Partial Discharge)"
-    elif p_c2h2 >= 13 and p_ch4 < 98:
+    elif p_c2h2 >= 15 and p_ch4 < 98: # Natural Ester Arcing threshold
         return p_ch4, p_c2h4, p_c2h2, "D1 / D2 (Arcing)"
-    elif 20 <= p_c2h4 < 50 and p_c2h2 < 4 and p_ch4 < 98:
+    elif 21 <= p_c2h4 < 50 and p_c2h2 < 15 and p_ch4 < 98:
         return p_ch4, p_c2h4, p_c2h2, "T2 (Thermal 300-700°C)"
     elif p_c2h4 >= 50 and p_c2h2 < 15 and p_ch4 < 98:
         return p_ch4, p_c2h4, p_c2h2, "T3 (Thermal >700°C)"
@@ -65,7 +66,7 @@ def get_bar_chart(val_h2, val_ch4, val_c2h6, val_c2h2, val_c2h4):
     bar_trace = go.Bar(
         x=x_labels, 
         y=y_values, 
-        marker_color='#1f77b4',
+        marker_color='#2ca02c', # Green for natural esters
         text=y_values,
         textposition='auto'
     )
@@ -95,10 +96,9 @@ st.set_page_config(page_title="Smart DGA Dashboard for Natural Ester", layout="w
 
 with st.sidebar:
     st.title("Data Input")
+    st.markdown("**Fluid Profile: Natural Ester (POME)**")
     st.markdown("Enter gas concentrations (ppm)")
     
-   
-
     st.divider()
     
     h2 = st.number_input("H2 (Hydrogen)", min_value=0, value=0, step=1)
@@ -111,17 +111,17 @@ with st.sidebar:
 # 3. MAIN INTERFACE
 # ==========================================
 st.title("Smart DGA Dashboard for Natural Ester")
-tab1, tab2 = st.tabs(["Duval Triangle", "Duval Pentagon"])
+tab1, tab2 = st.tabs(["Duval Triangle 3", "Duval Pentagon 3"])
 
 # ------------------------------------------
-# TAB 1: DUVAL TRIANGLE
+# TAB 1: DUVAL TRIANGLE 3
 # ------------------------------------------
 with tab1:
-    p_ch4, p_c2h4, p_c2h2, tri_fault = get_triangle_diagnosis(ch4, c2h4, c2h2)
+    p_ch4, p_c2h4, p_c2h2, tri_fault = get_triangle_3_diagnosis(ch4, c2h4, c2h2)
     col_chart, col_results = st.columns([7, 3])
     
     with col_results:
-        st.subheader("Triangle Diagnosis")
+        st.subheader("Triangle 3 Diagnosis")
         if tri_fault == "Normal":
             st.success("🟢 **Status:** Normal")
         else:
@@ -137,6 +137,8 @@ with tab1:
         if (ch4 + c2h4 + c2h2) > 0:
             fig = go.Figure()
             
+            # NOTE: These are currently placeholder/T1 coordinates. 
+            # You will need to extract Triangle 3 coordinates to perfect this visual!
             add_tri_zone(fig, [98, 100, 98], [2, 0, 0], [0, 0, 2], 'rgba(128,0,0,0.6)', 'PD')
             add_tri_zone(fig, [80, 76, 96, 98, 98], [0, 4, 4, 2, 0], [20, 20, 0, 0, 2], 'rgba(255,165,0,0.6)', 'T1')
             add_tri_zone(fig, [50, 46, 76, 80], [0, 4, 4, 0], [50, 50, 20, 20], 'rgba(255,200,150,0.8)', 'T2')
@@ -156,7 +158,7 @@ with tab1:
             st.warning("Please enter gas values greater than 0.")
 
 # ------------------------------------------
-# TAB 2: DUVAL PENTAGON
+# TAB 2: DUVAL PENTAGON 3
 # ------------------------------------------
 with tab2:
     col_pent_chart, col_pent_results = st.columns([7, 3])
@@ -201,26 +203,29 @@ with tab2:
             cx = cx / (6 * A)
             cy = cy / (6 * A)
 
-        pdX = [0, -1, -1, 0]
-        pdY = [33, 33, 24.5, 24.5]
+        # ---------------------------------------------------------
+        # PERFECTED PENTAGON 3 BOUNDARIES (From WebPlotDigitizer)
+        # ---------------------------------------------------------
+        pdX = [6.77, 5.71, 2.94, 4.00]
+        pdY = [33.24, 33.24, 24.65, 24.66]
         
-        d1X = [0, 38, 32, 4, 0]
-        d1Y = [40, 12, -6.1, 16, 1.5]
+        d1X = [-3.41, 5.25, 26.15, 38.00, 8.95]
+        d1Y = [1.64, 15.91, -5.87, 12.24, 40.00]
         
-        d2X = [4, 32, 24.3, 0, 0]
-        d2Y = [16, -6.1, -30, -3, 1.5]
+        d2X = [-3.47, -4.94, 10.48, 26.15, 5.25]
+        d2Y = [1.46, -3.11, -29.84, -5.87, 15.91]
         
-        t3X = [0, 24.3, 23.5, 1, -6]
-        t3Y = [-3, -30, -32.4, -32, -4]
+        t3X = [-14.42, -5.00, 10.42, 8.77]
+        t3Y = [-32.51, -3.29, -30.02, -32.40]
         
-        t2X = [-6, 1, -22.5]
-        t2Y = [-4, -32.4, -32.4]
+        t2X = [-3.41, -9.91, -36.90, -14.24, -4.94]
+        t2Y = [1.64, 2.89, -32.62, -32.51, -3.11]
         
-        t1X = [-6, -22.5, -23.5, -35, 0, 0]
-        t1Y = [-4, -32.4, -32.4, 3, 1.5, -3]
+        t1X = [-38.00, -10.09, -3.41, -9.91, -36.90]
+        t1Y = [12.24, 6.17, 1.64, 2.89, -32.62]
         
-        sX  = [0, -35, -38, 0, 0, -1, -1, 0]
-        sY  = [1.5, 3.1, 12.4, 40, 33, 33, 24.5, 24.5]
+        sX  = [9.01, -38.00, -9.91, -3.41, 4.00, 2.97, 5.65, 6.71]
+        sY  = [40.18, 12.24, 6.17, 1.64, 24.66, 24.74, 33.05, 33.06]
 
         if in_polygon(cx, cy, pdX, pdY):
             pent_fault = "PD (Partial Discharge)"
@@ -240,7 +245,7 @@ with tab2:
             pent_fault = "Unknown / Borderline"
 
         with col_pent_results:
-            st.subheader("Pentagon Diagnosis")
+            st.subheader("Pentagon 3 Diagnosis")
             st.markdown(f"**Calculated Centroid:**\nX: {cx:.2f}, Y: {cy:.2f}")
             st.error("🚨 **Alert:** Fault detected.")
             st.markdown(f"**Fault Type:** {pent_fault}")
