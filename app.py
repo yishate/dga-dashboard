@@ -209,17 +209,17 @@ with tab2:
         d1X = [0, 38, 30.5, 6, 0]
         d1Y = [40, 12.4, -10.5, 12.5, 0]
         
+        # FIXED: D2's bottom edge moved up to make room for T3
         d2X = [0, 6, 30.5, 23.5, 0]
-        d2Y = [0, 12.5, -10.5, -32.4, -32.4]
+        d2Y = [0, 12.5, -10.5, -32.4, -3.29]
         
+        # FIXED: T3's top point moved down the Y-axis (-3.29) so it doesn't meet at (0,0)
         t3X = [0, 23.5, 0]
-        t3Y = [0, -32.4, -32.4]
+        t3Y = [-3.29, -32.4, -32.4]
         
-        # FIXED: T2 corner perfectly locked to (0,0), hits exactly at the CH4 tip (-23.5, -32.4)
         t2X = [0, 0, -23.5, -9.91]
         t2Y = [0, -32.4, -32.4, 2.89]
         
-        # FIXED: T1 corner starts at CH4 tip, respects your kink (-9.91, 2.89), and closes exactly
         t1X = [0, -9.91, -23.5, -38, -9.7]
         t1Y = [0, 2.89, -32.4, 12.4, 5.8]
         
