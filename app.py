@@ -215,13 +215,13 @@ with tab2:
         t3X = [0, 23.5, 0]
         t3Y = [0, -32.4, -32.4]
         
-        # FIXED: T2 corner updated with your precise kink coordinate
-        t2X = [0, 0, -11.75, -9.91]
+        # FIXED: T2 corner perfectly locked to (0,0), hits exactly at the CH4 tip (-23.5, -32.4)
+        t2X = [0, 0, -23.5, -9.91]
         t2Y = [0, -32.4, -32.4, 2.89]
         
-        # FIXED: T1 corner updated with your precise kink coordinate
-        t1X = [0, -9.91, -11.75, -23.5, -38, -9.7]
-        t1Y = [0, 2.89, -32.4, -32.4, 12.4, 5.8]
+        # FIXED: T1 corner starts at CH4 tip, respects your kink (-9.91, 2.89), and closes exactly
+        t1X = [0, -9.91, -23.5, -38, -9.7]
+        t1Y = [0, 2.89, -32.4, 12.4, 5.8]
         
         sX  = [0, -9.7, -38, 0, 0, -1.8, -1.8, 0]
         sY  = [0, 5.8, 12.4, 40, 33, 33, 24, 24]
