@@ -20,7 +20,6 @@ def in_polygon(x, y, px, py):
         j = i
     return inside
 
-# Updated to perfectly match Natural Ester (FR3/POME) Triangle 3 Zones
 def get_triangle_3_diagnosis(ch4, c2h4, c2h2):
     total = ch4 + c2h4 + c2h2
     if total == 0:
@@ -31,25 +30,15 @@ def get_triangle_3_diagnosis(ch4, c2h4, c2h2):
     p_c2h2 = (c2h2 / total) * 100
     
     if p_ch4 >= 98:
-        tri_fault = "PD (Partial Discharge)"
-    elif p_c2h2 >= 29:
-        tri_fault = "D2 (High Energy Arcing)"
-    elif p_c2h2 >= 25 and p_c2h4 < 40:
-        tri_fault = "D2 (High Energy Arcing)"
-    elif p_c2h2 >= 13 and p_c2h2 < 25 and p_c2h4 < 40:
-        tri_fault = "D1 (Low Energy Arcing)"
-    elif p_c2h4 >= 40 and p_c2h2 >= (0.2 * p_c2h4 + 5) and p_c2h4 < 50:
-        tri_fault = "DT (Mixed Fault)"
-    elif p_c2h4 >= 50 and p_c2h2 >= 15 and p_c2h2 < 29:
-        tri_fault = "DT (Mixed Fault)"
-    elif p_c2h4 >= 63:
-        tri_fault = "T3 (Thermal > 700°C)"
-    elif p_c2h4 >= 43:
-        tri_fault = "T2 (Thermal 300 - 700°C)"
+        return p_ch4, p_c2h4, p_c2h2, "PD (Partial Discharge)"
+    elif p_c2h2 >= 15 and p_ch4 < 98: 
+        return p_ch4, p_c2h4, p_c2h2, "D1 / D2 (Arcing)"
+    elif 21 <= p_c2h4 < 50 and p_c2h2 < 15 and p_ch4 < 98:
+        return p_ch4, p_c2h4, p_c2h2, "T2 (Thermal 300-700°C)"
+    elif p_c2h4 >= 50 and p_c2h2 < 15 and p_ch4 < 98:
+        return p_ch4, p_c2h4, p_c2h2, "T3 (Thermal >700°C)"
     else:
-        tri_fault = "T1 (Thermal < 300°C)"
-        
-    return p_ch4, p_c2h4, p_c2h2, tri_fault
+        return p_ch4, p_c2h4, p_c2h2, "T1 or DT (Mixed)"
 
 def add_tri_zone(fig, a_vals, b_vals, c_vals, colour, name):
     trace_line = dict(color='black', width=1)
@@ -147,16 +136,13 @@ with tab1:
         if (ch4 + c2h4 + c2h2) > 0:
             fig = go.Figure()
             
-            # ---------------------------------------------------------
-            # PERFECTED TRIANGLE 3 BOUNDARIES (Natural Ester/FR3)
-            # ---------------------------------------------------------
-            add_tri_zone(fig, [100, 98, 98, 100], [0, 2, 0, 0], [0, 0, 2, 0], 'rgba(204,204,255,0.6)', 'PD')
-            add_tri_zone(fig, [87, 75, 35, 47, 87], [13, 25, 25, 13, 13], [0, 0, 40, 40, 0], 'rgba(255,204,204,0.6)', 'D1')
-            add_tri_zone(fig, [75, 0, 0, 31, 35, 75], [25, 100, 29, 29, 25, 25], [0, 0, 71, 40, 40, 0], 'rgba(255,153,153,0.6)', 'D2')
-            add_tri_zone(fig, [47, 31, 0, 0, 35, 47], [13, 29, 29, 15, 15, 13], [40, 40, 71, 85, 50, 40], 'rgba(224,255,255,0.8)', 'DT')
-            add_tri_zone(fig, [37, 22, 0, 0, 37], [0, 15, 15, 0, 0], [63, 63, 85, 100, 63], 'rgba(255,229,153,0.6)', 'T3')
-            add_tri_zone(fig, [57, 43.4, 35, 22, 37, 57], [0, 13.6, 15, 15, 0, 0], [43, 43, 50, 63, 63, 43], 'rgba(255,255,153,0.6)', 'T2')
-            add_tri_zone(fig, [98, 98, 87, 47, 43.4, 57, 98], [0, 2, 13, 13, 13.6, 0, 0], [2, 0, 0, 40, 43, 43, 2], 'rgba(204,255,204,0.6)', 'T1')
+            add_tri_zone(fig, [98, 100, 98], [2, 0, 0], [0, 0, 2], 'rgba(128,0,0,0.6)', 'PD')
+            add_tri_zone(fig, [80, 76, 96, 98, 98], [0, 4, 4, 2, 0], [20, 20, 0, 0, 2], 'rgba(255,165,0,0.6)', 'T1')
+            add_tri_zone(fig, [50, 46, 76, 80], [0, 4, 4, 0], [50, 50, 20, 20], 'rgba(255,200,150,0.8)', 'T2')
+            add_tri_zone(fig, [0, 35, 50, 0], [15, 15, 0, 0], [85, 50, 50, 100], 'rgba(139,69,19,0.6)', 'T3')
+            add_tri_zone(fig, [0, 87, 64, 0], [100, 13, 13, 77], [0, 0, 23, 23], 'rgba(173,216,230,0.6)', 'D1')
+            add_tri_zone(fig, [0, 64, 47, 31, 0], [77, 13, 13, 29, 29], [23, 23, 40, 40, 71], 'rgba(135,206,250,0.8)', 'D2')
+            add_tri_zone(fig, [0, 31, 47, 87, 96, 46, 35, 0], [29, 29, 13, 13, 4, 4, 15, 15], [71, 40, 40, 0, 0, 50, 50, 85], 'rgba(224,255,255,0.8)', 'DT')
             
             pt_mark = dict(symbol='circle', color='red', size=7, line=dict(color='red', width=2))
             fig.add_trace(go.Scatterternary(a=[p_ch4], b=[p_c2h2], c=[p_c2h4], mode='markers', marker=pt_mark, name='Calculated Point'))
@@ -223,9 +209,11 @@ with tab2:
         d1X = [0, 38, 30.5, 6, 0]
         d1Y = [40, 12.4, -10.5, 12.5, 0]
         
+        # FIXED: D2's bottom edge moved up to make room for T3
         d2X = [0, 6, 30.5, 23.5, 0]
         d2Y = [0, 12.5, -10.5, -32.4, -3.29]
         
+        # FIXED: T3's top point moved down the Y-axis (-3.29) so it doesn't meet at (0,0)
         t3X = [0, 23.5, 0]
         t3Y = [-3.29, -32.4, -32.4]
         
