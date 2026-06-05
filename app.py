@@ -206,25 +206,27 @@ with tab2:
         pdX = [0, -1.8, -1.8, 0]
         pdY = [33, 33, 24, 24]
         
+        # FIXED: D1 meets S, T1, and D2 at [0, 1.5]
         d1X = [0, 38, 30.5, 6, 0]
-        d1Y = [40, 12.4, -10.5, 12.5, 0]
+        d1Y = [40, 12.4, -10.5, 12.5, 1.5]
         
-        # FIXED: D2's bottom edge moved up to make room for T3
-        d2X = [0, 6, 30.5, 23.5, 0]
-        d2Y = [0, 12.5, -10.5, -32.4, -3.29]
+        # FIXED: D2 meets D1 at [0, 1.5] and drops down to [0, 0] sharing the boundary with T1
+        d2X = [0, 6, 30.5, 23.5, 0, 0]
+        d2Y = [1.5, 12.5, -10.5, -32.4, -3.29, 0]
         
-        # FIXED: T3's top point moved down the Y-axis (-3.29) so it doesn't meet at (0,0)
         t3X = [0, 23.5, 0]
         t3Y = [-3.29, -32.4, -32.4]
         
         t2X = [0, 0, -23.5, -9.91]
         t2Y = [0, -32.4, -32.4, 2.89]
         
-        t1X = [0, -9.91, -23.5, -38, -9.7]
-        t1Y = [0, 2.89, -32.4, 12.4, 5.8]
+        # FIXED: T1 meets S at [0, 1.5] and drops down to [0, 0] sharing the boundary with D2
+        t1X = [0, 0, -9.91, -23.5, -38, -9.7]
+        t1Y = [1.5, 0, 2.89, -32.4, 12.4, 5.8]
         
+        # FIXED: S meets D1 and T1 at [0, 1.5]
         sX  = [0, -9.7, -38, 0, 0, -1.8, -1.8, 0]
-        sY  = [0, 5.8, 12.4, 40, 33, 33, 24, 24]
+        sY  = [1.5, 5.8, 12.4, 40, 33, 33, 24, 24]
 
         if in_polygon(cx, cy, pdX, pdY):
             pent_fault = "PD (Partial Discharge)"
