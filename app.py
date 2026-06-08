@@ -199,6 +199,10 @@ with tab2:
                 cy += (y[i] + y[i+1]) * factor
             cx = cx / (6 * A)
             cy = cy / (6 * A)
+        else:
+     
+            cx = sum(x[:-1])
+            cy = sum(y[:-1])
 
         # ---------------------------------------------------------
         # FLUSH CLONED PENTAGON 3 COORDINATES 
