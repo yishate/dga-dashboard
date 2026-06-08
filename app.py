@@ -110,7 +110,7 @@ with st.sidebar:
 # 3. MAIN INTERFACE
 # ==========================================
 st.title("Smart DGA Dashboard for Natural Ester")
-tab1, tab2 = st.tabs(["Duval Triangle 1", "Duval Pentagon 3"])
+tab1, tab2 = st.tabs(["Duval Triangle ", "Duval Pentagon 3"])
 
 # ------------------------------------------
 # TAB 1: DUVAL TRIANGLE 3
