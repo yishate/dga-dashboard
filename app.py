@@ -199,38 +199,35 @@ with tab2:
                 cy += (y[i] + y[i+1]) * factor
             cx = cx / (6 * A)
             cy = cy / (6 * A)
-        else:
-     
-            cx = sum(x[:-1])
-            cy = sum(y[:-1])
 
-     # ---------------------------------------------------------
-        # HIGH-RESOLUTION PENTAGON 3 (TUNED FOR IEEE RAPESEED DATA)
+        # ---------------------------------------------------------
+        # FLUSH CLONED PENTAGON 3 COORDINATES 
         # ---------------------------------------------------------
         pdX = [0, -1.8, -1.8, 0]
         pdY = [33, 33, 24, 24]
         
-        # Expanded D1 and D2 to better capture high-energy fault drift
+        # D1 meets S, T1, and D2 at [0, 1.5]
         d1X = [0, 38, 30.5, 6, 0]
-        d1Y = [40, 12.4, -10.5, 12.5, 4.0]
+        d1Y = [40, 12.4, -10.5, 12.5, 1.5]
         
+        # D2 drops from [0, 1.5] down to the junction at [0, -3.29]
         d2X = [0, 6, 30.5, 23.5, 0]
-        d2Y = [4.0, 12.5, -10.5, -32.4, -6.5]
+        d2Y = [1.5, 12.5, -10.5, -32.4, -3.29]
         
         t3X = [0, 23.5, 0]
-        t3Y = [-6.5, -32.4, -32.4]
+        t3Y = [-3.29, -32.4, -32.4]
         
-        # T2: Expanded the upper boundary point significantly to catch the Ethane spike
-        t2X = [0, 0, -23.5, -38.0]
-        t2Y = [4.0, -32.4, -32.4, -5.0]
+        # FIXED: T2 goes straight up the vertical axis and anchors perfectly at [0, 1.5]
+        t2X = [0, 0, -23.5, -9.91]
+        t2Y = [1.5, -32.4, -32.4, 2.89]
         
-        # T1: Refined wedge to capture mid-range thermal cases
-        t1X = [0, -38.0, -35.0]
-        t1Y = [4.0, -5.0, 6.0]
+        # FIXED: T1 comes to a sharp, single point at [0, 1.5]
+        t1X = [0, -9.91, -23.5, -38, -9.7]
+        t1Y = [1.5, 2.89, -32.4, 12.4, 5.8]
         
-        # S: Final adjusted boundary to ensure Stray Gassing lands outside T1
-        sX  = [0, -35.0, -38, 0, 0, -1.8, -1.8, 0]
-        sY  = [6.0, 6.0, 12.4, 40, 33, 33, 24, 24]
+        # S meets D1 and T1 at [0, 1.5]
+        sX  = [0, -9.7, -38, 0, 0, -1.8, -1.8, 0]
+        sY  = [1.5, 5.8, 12.4, 40, 33, 33, 24, 24]
 
         if in_polygon(cx, cy, pdX, pdY):
             pent_fault = "PD (Partial Discharge)"
