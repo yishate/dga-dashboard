@@ -95,7 +95,7 @@ st.set_page_config(page_title="Smart DGA Dashboard for Natural Ester", layout="w
 
 with st.sidebar:
     st.title("Data Input")
-    st.markdown("**Fluid Profile: Natural Ester (POME)**")
+  
     st.markdown("Enter gas concentrations (ppm)")
     
     st.divider()
