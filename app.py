@@ -199,6 +199,11 @@ with tab2:
                 cy += (y[i] + y[i+1]) * factor
             cx = cx / (6 * A)
             cy = cy / (6 * A)
+        else:
+            # FIXED: Fallback for when Area = 0 (e.g., a single pure gas is entered)
+            # The centroid mathematically collapses to the sum of the scaled coordinates
+            cx = sum(x[:-1])
+            cy = sum(y[:-1])
 
         # ---------------------------------------------------------
         # FLUSH CLONED PENTAGON 3 COORDINATES 
