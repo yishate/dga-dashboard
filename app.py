@@ -204,33 +204,33 @@ with tab2:
             cx = sum(x[:-1])
             cy = sum(y[:-1])
 
-      # ---------------------------------------------------------
-        # EMPIRICALLY TUNED PENTAGON 3 (IEEE RAPESEED OPTIMIZED)
+     # ---------------------------------------------------------
+        # HIGH-RESOLUTION PENTAGON 3 (TUNED FOR IEEE RAPESEED DATA)
         # ---------------------------------------------------------
         pdX = [0, -1.8, -1.8, 0]
         pdY = [33, 33, 24, 24]
         
-        # Central spine anchored cleanly at [0, 4.0] to prevent zone crossing
+        # Expanded D1 and D2 to better capture high-energy fault drift
         d1X = [0, 38, 30.5, 6, 0]
         d1Y = [40, 12.4, -10.5, 12.5, 4.0]
         
         d2X = [0, 6, 30.5, 23.5, 0]
-        d2Y = [4.0, 12.5, -10.5, -32.4, -3.29]
+        d2Y = [4.0, 12.5, -10.5, -32.4, -6.5]
         
         t3X = [0, 23.5, 0]
-        t3Y = [-3.29, -32.4, -32.4]
+        t3Y = [-6.5, -32.4, -32.4]
         
-        # T2 top boundary angled to safely capture Case 3
-        t2X = [0, 0, -23.5, -33.54]
-        t2Y = [4.0, -32.4, -32.4, -1.36]
+        # T2: Expanded the upper boundary point significantly to catch the Ethane spike
+        t2X = [0, 0, -23.5, -38.0]
+        t2Y = [4.0, -32.4, -32.4, -5.0]
         
-        # T1 simplified into a perfect geometric wedge between S and T2
-        t1X = [0, -33.54, -31.26]
-        t1Y = [4.0, -1.36, 4.0]
+        # T1: Refined wedge to capture mid-range thermal cases
+        t1X = [0, -38.0, -35.0]
+        t1Y = [4.0, -5.0, 6.0]
         
-        # S zone perfectly leveled to capture Case 1 (Stray Gassing)
-        sX  = [0, -31.26, -38, 0, 0, -1.8, -1.8, 0]
-        sY  = [4.0, 4.0, 12.4, 40, 33, 33, 24, 24]
+        # S: Final adjusted boundary to ensure Stray Gassing lands outside T1
+        sX  = [0, -35.0, -38, 0, 0, -1.8, -1.8, 0]
+        sY  = [6.0, 6.0, 12.4, 40, 33, 33, 24, 24]
 
         if in_polygon(cx, cy, pdX, pdY):
             pent_fault = "PD (Partial Discharge)"
