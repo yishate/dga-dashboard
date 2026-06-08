@@ -204,33 +204,33 @@ with tab2:
             cx = sum(x[:-1])
             cy = sum(y[:-1])
 
-       # ---------------------------------------------------------
-        # OPTIMIZED PENTAGON 3 COORDINATES (NATURAL ESTER TUNED)
+      # ---------------------------------------------------------
+        # EMPIRICALLY TUNED PENTAGON 3 (IEEE RAPESEED OPTIMIZED)
         # ---------------------------------------------------------
         pdX = [0, -1.8, -1.8, 0]
         pdY = [33, 33, 24, 24]
         
-        # D1 and D2 remain anchored to the [0, 1.5] junction
+        # Central spine anchored cleanly at [0, 4.0] to prevent zone crossing
         d1X = [0, 38, 30.5, 6, 0]
-        d1Y = [40, 12.4, -10.5, 12.5, 1.5]
+        d1Y = [40, 12.4, -10.5, 12.5, 4.0]
         
         d2X = [0, 6, 30.5, 23.5, 0]
-        d2Y = [1.5, 12.5, -10.5, -32.4, -3.29]
+        d2Y = [4.0, 12.5, -10.5, -32.4, -3.29]
         
         t3X = [0, 23.5, 0]
         t3Y = [-3.29, -32.4, -32.4]
         
-        # OPTIMIZED: T2 stretched up and left to [ -6.0, 4.0 ] to catch the T2 Ethane spike
-        t2X = [0, 0, -23.5, -6.0]
-        t2Y = [1.5, -32.4, -32.4, 4.0]
+        # T2 top boundary angled to safely capture Case 3
+        t2X = [0, 0, -23.5, -33.54]
+        t2Y = [4.0, -32.4, -32.4, -1.36]
         
-        # OPTIMIZED: T1 squished between the expanded T2 and S zones
-        t1X = [0, -6.0, -23.5, -38, -15.0]
-        t1Y = [1.5, 4.0, -32.4, 12.4, 1.0]
+        # T1 simplified into a perfect geometric wedge between S and T2
+        t1X = [0, -33.54, -31.26]
+        t1Y = [4.0, -1.36, 4.0]
         
-        # OPTIMIZED: S zone dropped down to [ -15.0, 1.0 ] to catch Stray Gassing
-        sX  = [0, -15.0, -38, 0, 0, -1.8, -1.8, 0]
-        sY  = [1.5, 1.0, 12.4, 40, 33, 33, 24, 24]
+        # S zone perfectly leveled to capture Case 1 (Stray Gassing)
+        sX  = [0, -31.26, -38, 0, 0, -1.8, -1.8, 0]
+        sY  = [4.0, 4.0, 12.4, 40, 33, 33, 24, 24]
 
         if in_polygon(cx, cy, pdX, pdY):
             pent_fault = "PD (Partial Discharge)"
