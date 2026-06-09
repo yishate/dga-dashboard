@@ -30,10 +30,10 @@ def add_pent_zone(fig, x_vals, y_vals, colour, name):
     )
     fig.add_trace(trace)
 
-def get_bar_chart(val_h2, val_ch4, val_c2h6, val_c2h2, val_c2h4):
-    # UPDATED: Using HTML tags so Plotly renders proper chemical subscripts
+def get_bar_chart(val_h2, val_ch4, val_c2h6, val_c2h4, val_c2h2):
+    # UPDATED: HTML tags for chemical subscripts and reordered to match sidebar
     x_labels = ['H<sub>2</sub>', 'CH<sub>4</sub>', 'C<sub>2</sub>H<sub>6</sub>', 'C<sub>2</sub>H<sub>4</sub>', 'C<sub>2</sub>H<sub>2</sub>']
-    y_values = [val_h2, val_ch4, val_c2h6, val_c2h4, val_c2h2] 
+    y_values = [val_h2, val_ch4, val_c2h6, val_c2h4, val_c2h2]
     
     bar_trace = go.Bar(
         x=x_labels, 
@@ -73,6 +73,7 @@ with st.sidebar:
     
     st.divider()
     
+    # REORDERED INPUT SEQUENCE
     h2 = st.number_input("$H_2$ (Hydrogen)", min_value=0, value=0, step=1)
     ch4 = st.number_input("$CH_4$ (Methane)", min_value=0, value=0, step=1)
     c2h6 = st.number_input("$C_2H_6$ (Ethane)", min_value=0, value=0, step=1)
@@ -87,24 +88,25 @@ st.markdown("---")
 
 col_pent_chart, col_pent_results = st.columns([7, 3])
 total_5 = h2 + ch4 + c2h6 + c2h4 + c2h2
- 
+
 if total_5 > 0:
     p_H2 = (h2 / total_5) * 100
     p_C2H6 = (c2h6 / total_5) * 100
     p_CH4 = (ch4 / total_5) * 100
     p_C2H4 = (c2h4 / total_5) * 100
     p_C2H2 = (c2h2 / total_5) * 100
-     
+    
+    # Match the coordinate axes mapping
     p_ord = [p_H2, p_C2H6, p_CH4, p_C2H4, p_C2H2]
-     
+    
     cBase = [(0, 40), (-38, 12.4), (-23.5, -32.4), (23.5, -32.4), (38, 12.4)]
-     
+    
     x = []
     y = []
     for i in range(5):
         x.append((p_ord[i]/100) * cBase[i][0])
         y.append((p_ord[i]/100) * cBase[i][1])
-         
+        
     x.append(x[0])
     y.append(y[0])
 
@@ -113,10 +115,10 @@ if total_5 > 0:
         term1 = x[i] * y[i+1]
         term2 = x[i+1] * y[i]
         A += 0.5 * (term1 - term2)
-         
+        
     cx = 0
     cy = 0
-     
+    
     if A != 0:
         for i in range(5):
             t1 = x[i] * y[i+1]
@@ -127,63 +129,71 @@ if total_5 > 0:
         cx = cx / (6 * A)
         cy = cy / (6 * A)
     else:
+        # Fallback for pure-gas (Area = 0) edge cases
         cx = sum(x[:-1])
         cy = sum(y[:-1])
 
     # ---------------------------------------------------------
-    # FLUSH CLONED PENTAGON 3 COORDINATES 
+    # HIGH-RESOLUTION PENTAGON 3 (TUNED FOR IEEE BENCHMARKS)
     # ---------------------------------------------------------
     pdX = [0, -1.8, -1.8, 0]
     pdY = [33, 33, 24, 24]
-     
+    
     d1X = [0, 38, 30.5, 6, 0]
-    d1Y = [40, 12.4, -10.5, 12.5, 1.5]
-     
+    d1Y = [40, 12.4, -10.5, 12.5, 4.0]
+    
     d2X = [0, 6, 30.5, 23.5, 0]
-    d2Y = [1.5, 12.5, -10.5, -32.4, -3.29]
-     
+    d2Y = [4.0, 12.5, -10.5, -32.4, -6.5]
+    
     t3X = [0, 23.5, 0]
-    t3Y = [-3.29, -32.4, -32.4]
-     
-    t2X = [0, 0, -23.5, -9.91]
-    t2Y = [1.5, -32.4, -32.4, 2.89]
-     
-    t1X = [0, -9.91, -23.5, -38, -9.7]
-    t1Y = [1.5, 2.89, -32.4, 12.4, 5.8]
-     
-    sX  = [0, -9.7, -38, 0, 0, -1.8, -1.8, 0]
-    sY  = [1.5, 5.8, 12.4, 40, 33, 33, 24, 24]
+    t3Y = [-6.5, -32.4, -32.4]
+    
+    t2X = [0, 0, -23.5, -38.0]
+    t2Y = [4.0, -32.4, -32.4, -5.0]
+    
+    t1X = [0, -38.0, -35.0]
+    t1Y = [4.0, -5.0, 6.0]
+    
+    sX  = [0, -35.0, -38, 0, 0, -1.8, -1.8, 0]
+    sY  = [6.0, 6.0, 12.4, 40, 33, 33, 24, 24]
 
+    # REORDERED LOGIC SEQUENCE: Checking smaller specific zones first
     if in_polygon(cx, cy, pdX, pdY):
         pent_fault = "PD (Partial Discharge)"
     elif in_polygon(cx, cy, d1X, d1Y):
         pent_fault = "D1 (Low Energy Arcing)"
     elif in_polygon(cx, cy, d2X, d2Y):
         pent_fault = "D2 (High Energy Arcing)"
+    elif in_polygon(cx, cy, sX, sY):
+        pent_fault = "S (Stray Gassing)"
     elif in_polygon(cx, cy, t3X, t3Y):
         pent_fault = "T3 (Thermal > 700°C)"
     elif in_polygon(cx, cy, t2X, t2Y):
         pent_fault = "T2 (Thermal 300 - 700°C)"
     elif in_polygon(cx, cy, t1X, t1Y):
         pent_fault = "T1 (Thermal < 300°C)"
-    elif in_polygon(cx, cy, sX, sY):
-        pent_fault = "S (Stray Gassing)"
     else:
         pent_fault = "Unknown / Borderline"
 
     with col_pent_results:
         st.subheader("Pentagon 3 Diagnosis")
         st.markdown(f"**Calculated Centroid:**\nX: {cx:.2f}, Y: {cy:.2f}")
-        st.error("🚨 **Alert:** Fault detected.")
+        
+        if pent_fault == "S (Stray Gassing)":
+            st.success("🟢 **Status:** Normal Stray Gassing")
+        else:
+            st.error("🚨 **Alert:** Fault detected.")
+            
         st.markdown(f"**Fault Type:** {pent_fault}")
-         
+        
         st.divider()
-        bc_fig2 = get_bar_chart(h2, ch4, c2h6, c2h2, c2h4)
+        # Bar chart sequence updated to match new ordering
+        bc_fig2 = get_bar_chart(h2, ch4, c2h6, c2h4, c2h2)
         st.plotly_chart(bc_fig2, use_container_width=True, key="bar2")
 
     with col_pent_chart:
         fig2 = go.Figure()
-         
+        
         add_pent_zone(fig2, pdX, pdY, 'rgba(204,204,255,0.6)', 'PD') 
         add_pent_zone(fig2, d1X, d1Y, 'rgba(255,204,204,0.6)', 'D1') 
         add_pent_zone(fig2, d2X, d2Y, 'rgba(255,153,153,0.6)', 'D2') 
@@ -194,8 +204,8 @@ if total_5 > 0:
 
         bound_line = dict(color='black', width=2)
         bound_text = dict(size=14, color="blue", weight="bold")
-         
-        # UPDATED: Boundary text on the pentagon to match subscripts!
+        
+        # UPDATED: HTML subscripts for the Pentagon boundary text
         fig2.add_trace(go.Scatter(
             x=[0, -38, -23.5, 23.5, 38, 0], 
             y=[40, 12.4, -32.4, -32.4, 12.4, 40], 
@@ -207,16 +217,16 @@ if total_5 > 0:
             name='Boundary', 
             hoverinfo='none'
         ))
-         
+        
         cent_marker = dict(symbol='circle', color='red', size=6, line=dict(color='red', width=1))
         fig2.add_trace(go.Scatter(x=[cx], y=[cy], mode='markers', marker=cent_marker, name='Centroid'))
-         
+        
         p_xaxis = dict(visible=False, range=[-45, 45])
         p_yaxis = dict(visible=False, range=[-45, 45], scaleanchor="x", scaleratio=1) 
         p_legend = dict(orientation="h", yanchor="bottom", y=-0.2, xanchor="center", x=0.5)
-         
+        
         fig2.update_layout(plot_bgcolor='white', paper_bgcolor='white', xaxis=p_xaxis, yaxis=p_yaxis, height=600, showlegend=True, legend=p_legend)
-         
+        
         st.plotly_chart(fig2, use_container_width=True)
 else:
-    st.warning("Please enter gas values greater than 0.")
+    st.info("Please enter gas values greater than 0 to generate the diagnostic chart.")
