@@ -101,7 +101,7 @@ with st.sidebar:
     st.divider()
     
     h2 = st.number_input("$H_2$ (Hydrogen)", min_value=0, value=0, step=1)
-    ch4 = st.number_input("CH4 (Methane)", min_value=0, value=0, step=1)
+    ch4 = st.number_input("$CH_4$ (Methane)", min_value=0, value=0, step=1)
     c2h6 = st.number_input("C2H6 (Ethane)", min_value=0, value=0, step=1)
     c2h2 = st.number_input("C2H2 (Acetylene)", min_value=0, value=0, step=1)
     c2h4 = st.number_input("C2H4 (Ethylene)", min_value=0, value=0, step=1)
