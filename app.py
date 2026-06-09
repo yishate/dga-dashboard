@@ -1,5 +1,6 @@
 import streamlit as st
 import plotly.graph_objects as go
+import math
 
 # ==========================================
 # 1. THE "BRAIN": MATHS & POLYGON LOGIC
@@ -31,7 +32,6 @@ def add_pent_zone(fig, x_vals, y_vals, colour, name):
     fig.add_trace(trace)
 
 def get_bar_chart(val_h2, val_ch4, val_c2h6, val_c2h2, val_c2h4):
-    # UPDATED: Using HTML tags so Plotly renders proper chemical subscripts
     x_labels = ['H<sub>2</sub>', 'CH<sub>4</sub>', 'C<sub>2</sub>H<sub>6</sub>', 'C<sub>2</sub>H<sub>4</sub>', 'C<sub>2</sub>H<sub>2</sub>']
     y_values = [val_h2, val_ch4, val_c2h6, val_c2h4, val_c2h2] 
     
@@ -97,13 +97,17 @@ if total_5 > 0:
      
     p_ord = [p_H2, p_C2H6, p_CH4, p_C2H4, p_C2H2]
      
-    cBase = [(0, 40), (-38, 12.4), (-23.5, -32.4), (23.5, -32.4), (38, 12.4)]
+    # EXCEL MATH FIX: Calculate polygon vertices using exact 
+    # percentages (0-100) and exact trigonometric angles.
+    # Angles: H2(90°), C2H6(162°), CH4(234°), C2H4(306°), C2H2(18°)
+    angles = [90, 162, 234, 306, 18]
      
     x = []
     y = []
     for i in range(5):
-        x.append((p_ord[i]/100) * cBase[i][0])
-        y.append((p_ord[i]/100) * cBase[i][1])
+        rad = math.radians(angles[i])
+        x.append(p_ord[i] * math.cos(rad))
+        y.append(p_ord[i] * math.sin(rad))
          
     x.append(x[0])
     y.append(y[0])
@@ -127,8 +131,9 @@ if total_5 > 0:
         cx = cx / (6 * A)
         cy = cy / (6 * A)
     else:
-        cx = sum(x[:-1])
-        cy = sum(y[:-1])
+        # Fallback if area is perfectly 0 (pure gas). Centroid drops to 1/3 radius.
+        cx = sum(x[:-1]) / 3.0
+        cy = sum(y[:-1]) / 3.0
 
     # ---------------------------------------------------------
     # FLUSH CLONED PENTAGON 3 COORDINATES 
@@ -195,7 +200,6 @@ if total_5 > 0:
         bound_line = dict(color='black', width=2)
         bound_text = dict(size=14, color="blue", weight="bold")
          
-        # UPDATED: Boundary text on the pentagon to match subscripts!
         fig2.add_trace(go.Scatter(
             x=[0, -38, -23.5, 23.5, 38, 0], 
             y=[40, 12.4, -32.4, -32.4, 12.4, 40], 
