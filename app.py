@@ -2,9 +2,7 @@ import streamlit as st
 import plotly.graph_objects as go
 import math
 
-# ==========================================
-# 1. THE "BRAIN": MATHS & POLYGON LOGIC
-# ==========================================
+
 def in_polygon(x, y, px, py):
     inside = False
     n = len(px)
@@ -61,9 +59,7 @@ def get_bar_chart(val_h2, val_ch4, val_c2h6, val_c2h2, val_c2h4):
     
     return fig
 
-# ==========================================
-# 2. PAGE CONFIGURATION & SIDEBAR
-# ==========================================
+
 st.set_page_config(page_title="Smart DGA Dashboard for Natural Ester", layout="wide")
 
 with st.sidebar:
@@ -79,9 +75,7 @@ with st.sidebar:
     c2h4 = st.number_input("$C_2H_4$ (Ethylene)", min_value=0.0, value=0.00, step=0.01, format="%.2f")
     c2h2 = st.number_input("$C_2H_2$ (Acetylene)", min_value=0.0, value=0.00, step=0.01, format="%.2f")
 
-# ==========================================
-# 3. MAIN INTERFACE: DUVAL PENTAGON 3 ONLY
-# ==========================================
+
 st.title("Duval Pentagon 3 Dashboard for Natural Ester")
 st.markdown("---")
 
@@ -97,9 +91,7 @@ if total_5 > 0:
      
     p_ord = [p_H2, p_C2H6, p_CH4, p_C2H4, p_C2H2]
      
-    # EXCEL MATH FIX: Calculate polygon vertices using exact 
-    # percentages (0-100) and exact trigonometric angles.
-    # Angles: H2(90°), C2H6(162°), CH4(234°), C2H4(306°), C2H2(18°)
+
     angles = [90, 162, 234, 306, 18]
      
     x = []
@@ -135,9 +127,7 @@ if total_5 > 0:
         cx = sum(x[:-1]) / 3.0
         cy = sum(y[:-1]) / 3.0
 
-    # ---------------------------------------------------------
-    # FLUSH CLONED PENTAGON 3 COORDINATES 
-    # ---------------------------------------------------------
+
     pdX = [0, -1.8, -1.8, 0]
     pdY = [33, 33, 24, 24]
      
