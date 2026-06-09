@@ -73,11 +73,11 @@ with st.sidebar:
     
     st.divider()
     
-    h2 = st.number_input("$H_2$ (Hydrogen)", min_value=0, value=0, step=1)
-    ch4 = st.number_input("$CH_4$ (Methane)", min_value=0, value=0, step=1)
-    c2h6 = st.number_input("$C_2H_6$ (Ethane)", min_value=0, value=0, step=1)
-    c2h4 = st.number_input("$C_2H_4$ (Ethylene)", min_value=0, value=0, step=1)
-    c2h2 = st.number_input("$C_2H_2$ (Acetylene)", min_value=0, value=0, step=1)
+    h2 = st.number_input("$H_2$ (Hydrogen)", min_value=0.0, value=0.00, step=0.01, format="%.2f")
+    ch4 = st.number_input("$CH_4$ (Methane)", min_value=0.0, value=0.00, step=0.01, format="%.2f")
+    c2h6 = st.number_input("$C_2H_6$ (Ethane)", min_value=0.0, value=0.00, step=0.01, format="%.2f")
+    c2h4 = st.number_input("$C_2H_4$ (Ethylene)", min_value=0.0, value=0.00, step=0.01, format="%.2f")
+    c2h2 = st.number_input("$C_2H_2$ (Acetylene)", min_value=0.0, value=0.00, step=0.01, format="%.2f")
 
 # ==========================================
 # 3. MAIN INTERFACE: DUVAL PENTAGON 3 ONLY
