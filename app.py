@@ -31,8 +31,8 @@ def add_pent_zone(fig, x_vals, y_vals, colour, name):
     fig.add_trace(trace)
 
 def get_bar_chart(val_h2, val_ch4, val_c2h6, val_c2h2, val_c2h4):
-    x_labels = ['H2', 'CH4', 'C2H6', 'C2H4', 'C2H2']
-    # Updated the bar chart to match your new input sequence
+    # UPDATED: Using HTML tags so Plotly renders proper chemical subscripts
+    x_labels = ['H<sub>2</sub>', 'CH<sub>4</sub>', 'C<sub>2</sub>H<sub>6</sub>', 'C<sub>2</sub>H<sub>4</sub>', 'C<sub>2</sub>H<sub>2</sub>']
     y_values = [val_h2, val_ch4, val_c2h6, val_c2h4, val_c2h2] 
     
     bar_trace = go.Bar(
@@ -73,7 +73,6 @@ with st.sidebar:
     
     st.divider()
     
-    # REORDERED INPUT SEQUENCE
     h2 = st.number_input("$H_2$ (Hydrogen)", min_value=0, value=0, step=1)
     ch4 = st.number_input("$CH_4$ (Methane)", min_value=0, value=0, step=1)
     c2h6 = st.number_input("$C_2H_6$ (Ethane)", min_value=0, value=0, step=1)
@@ -196,12 +195,13 @@ if total_5 > 0:
         bound_line = dict(color='black', width=2)
         bound_text = dict(size=14, color="blue", weight="bold")
          
+        # UPDATED: Boundary text on the pentagon to match subscripts!
         fig2.add_trace(go.Scatter(
             x=[0, -38, -23.5, 23.5, 38, 0], 
             y=[40, 12.4, -32.4, -32.4, 12.4, 40], 
             mode='lines+text', 
             line=bound_line, 
-            text=['H2', 'C2H6', 'CH4', 'C2H4', 'C2H2', ''], 
+            text=['H<sub>2</sub>', 'C<sub>2</sub>H<sub>6</sub>', 'CH<sub>4</sub>', 'C<sub>2</sub>H<sub>4</sub>', 'C<sub>2</sub>H<sub>2</sub>', ''], 
             textposition="middle center", 
             textfont=bound_text, 
             name='Boundary', 
