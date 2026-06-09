@@ -123,7 +123,7 @@ if total_5 > 0:
         cx = cx / (6 * A)
         cy = cy / (6 * A)
     else:
-        # Fallback if area is perfectly 0 (pure gas). Centroid drops to 1/3 radius.
+      
         cx = sum(x[:-1]) / 3.0
         cy = sum(y[:-1]) / 3.0
 
